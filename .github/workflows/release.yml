@@ -4,31 +4,31 @@ on:
 
 jobs:
   release:
-    name: release ${{ matrix.target }}
-    runs-on: ubuntu-latest
+    name: release ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - target: x86_64-pc-windows-gnu
             archive: zip
+            os: windows-2019
           - target: x86_64-unknown-linux-musl
             archive: tar.gz
+            os: ubuntu-18.04
           - target: x86_64-apple-darwin
             archive: zip
+            os: macos-11
     steps:
       - uses: actions/checkout@master
-      - name: Compile and release
-        uses: rust-build/rust-build.action@v1.4.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          RUSTTARGET: ${{ matrix.target }}
-          ARCHIVE_TYPES: ${{ matrix.archive }}
+      - uses: actions-rs/toolchain@v1
+          with:
+            toolchain: stable
+      - run: cargo build
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: Binary
-          path: |
-            ${{ steps.compile.outputs.BUILT_ARCHIVE }}
-            ${{ steps.compile.outputs.BUILT_CHECKSUM }}
+          with:
+            name: akula_${{ matrix.os }}
+            path: target/production/akula
