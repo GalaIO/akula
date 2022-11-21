@@ -22,8 +22,8 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - uses: actions-rs/toolchain@v1
-          with:
-            toolchain: stable
+        with:
+          toolchain: stable
       - run: cargo build
       - name: Upload artifact
         uses: actions/upload-artifact@v3
