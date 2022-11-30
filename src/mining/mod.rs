@@ -9,6 +9,7 @@ use crate::{
 use mdbx::{EnvironmentKind, RW};
 use std::time::Instant;
 use tracing::*;
+use crate::kv::mdbx::MdbxEnvironment;
 
 pub mod proposal;
 pub mod state;
@@ -43,6 +44,15 @@ where
         S: Stage<'db, E> + 'static,
     {
         self.stages.push(Box::new(stage));
+    }
+
+    pub async fn run_with_db<'db1: 'db>(
+        &'db mut self,
+        db: &'db MdbxEnvironment<E>,
+        last_block: BlockNumber,
+    ) {
+        let mut tx = db.begin_mutable().unwrap();
+        self.run(&mut tx, last_block).await;
     }
 
     pub async fn run<'tx>(

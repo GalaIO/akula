@@ -87,7 +87,7 @@ lru = "0.8"
 lru-cache = "0.1"
 lazy_static = "1.4.0"
 maplit = "1"
-mdbx = { package = "libmdbx", version = "0.1" }
+mdbx = { package = "libmdbx", git = "https://github.com/GalaIO/libmdbx-rs.git", rev = "adaab8da3acf80732e116521e5c1a1c74c749b56" }
 milagro_bls = { git = "https://github.com/sigp/milagro_bls", tag = "v1.4.2" }
 modular-bitfield = "0.11"
 num-bigint = "0.4"
